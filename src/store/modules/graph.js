@@ -1,7 +1,7 @@
 import api from '../api'
 const state = {
     graphList: {data: [], page: '', pages: ''},
-    graphDetailList: []
+    graphDetailList: {data: [], page: '', pages: ''}
 }
 
 const getters = {

@@ -29,7 +29,7 @@ function getList (connection, sql, req, res, offset = 10) {
             if (err) {
                 res.json({status: err})
             } else {
-                res.json({status: 0, data: results, page: Number(query.page), pages: Math.ceil(counts[0].count / (query.size || offset))})
+                res.json({status: 0, data: results, page: Number(query.page), pages: Math.ceil((counts[0].count / (query.size || offset)) || 1)})
             }
         })
     

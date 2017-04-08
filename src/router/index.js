@@ -32,7 +32,7 @@ export default new Router({
                     component: GraphList
                 },
                 {
-                    path: 'graph-detail/:ID',
+                    path: 'graph-detail/:ID/:PAGE',
                     component: AdminGraphDetail
                 }
             ]

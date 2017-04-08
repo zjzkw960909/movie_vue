@@ -12,7 +12,7 @@ div
         el-upload(style="display:inline-block", action="/api/upload", :on-remove="handleRemove", :file-list="fileList", :on-success="succesFiles")
             el-button(size="small" type="success") 点击上传图片
         el-button(style="float:right;margin:4px", @click="add", type="primary") 保存
-    el-table(:data="tableData", style="width:100%", border)
+    el-table(:data="tableData.data", style="width:100%", border)
         el-table-column(prop="desc",label="详细内容",width:140)
         el-table-column(label="图片",width:140)
             template(scope="scope", lang="pug")
@@ -21,14 +21,16 @@ div
             template(scope="scope", lang="pug")
                 el-button(type="text", size="small", @click="edit(scope)") 编辑
                 el-button(type="text", size="small", @click="del(scope)") 删除
+    Page(:allPages='tableData.pages', :page='tableData.page', @changePage="gotoPage")
 
 </template>
 
 <script>
 import _ from 'underscore'
+import Page from '../components/Page'
 export default {
     name: 'admin',
-    components: {},
+    components: {Page},
     data () {
         return {
             desced: '',
@@ -47,8 +49,12 @@ export default {
             return this.$store.getters.graphDetailList
         }
     },
+    beforeRouteUpdate (to, from, next) {
+        this.$store.dispatch('getGraphDetailList', 'page=' + to.params.PAGE)
+        next()
+    },
     created () {
-        this.$store.dispatch('getGraphDetailList', 'graphId=' + this.graphId + '&page=1')
+        this.$store.dispatch('getGraphDetailList', 'graphId=' + this.graphId + '&page=' + this.$route.params.PAGE)
     },
     methods: {
         handleAvatarScucess (res) {
@@ -66,6 +72,9 @@ export default {
         succesFiles (res, files) {
             this.uploadFiles.push(res.path)
         },
+        gotoPage (e) {
+            this.$router.push({path: e})
+        },
         init () {
             this.desced = ''
             this.imageUrl = []
@@ -80,11 +89,11 @@ export default {
             if (this.editId) {
                 post.id = this.editId
                 http.put('/api/graphDetail', post).then((res) => {
-                    this.$store.dispatch('getGraphDetailList', `graphId=${this.graphId}&page=1`)
+                    this.$store.dispatch('getGraphDetailList', `graphId=${this.graphId}&page=${this.$route.params.PAGE}`)
                 })
             } else {
                 http.post('/api/graphDetail', post).then((res) => {
-                    this.$store.dispatch('getGraphDetailList', `graphId=${this.graphId}&page=1`)
+                    this.$store.dispatch('getGraphDetailList', `graphId=${this.graphId}&page=${this.$route.params.PAGE}`)
                 })
             }
             this.init()

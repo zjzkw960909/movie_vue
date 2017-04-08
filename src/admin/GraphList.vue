@@ -81,7 +81,7 @@ export default {
             this.dialogFormVisible = true
         },
         href (e) {
-            this.$router.push(`graph-detail/${e.row.id}`)
+            this.$router.push(`/admin/graph-detail/${e.row.id}/1`)
         },
         edit (e) {
             let data = e.row
@@ -109,7 +109,7 @@ export default {
                             if (!res.data.status) {
                                 instance.confirmButtonLoading = false
                                 done()
-                                this.$store.dispatch('getGraphList', 'page=1')
+                                this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
                             }
                         })
                     } else {

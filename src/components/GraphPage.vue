@@ -1,10 +1,7 @@
 <template lang="pug">
 .page
-    ul
-        li 第一页
-        li 第一页
-        li 第一页
-        li 第一页
+    ul(@click="goto")
+        li(v-for="v in page") {{ v }}
     .bottom
         .left
             i.fa.fa-eye-slash
@@ -17,12 +14,28 @@
 <script>
 export default {
     name: 'graphPage',
+    props: ['pages', 'href'],
     data () {
         return {
         }
     },
+    computed: {
+        page () {
+            let arr = []
+            let pages = this.pages
+            for (let i = 1; i <= pages; i++) {
+                arr.push(`第${i}页`)
+            }
+            return arr
+        }
+    },
     methods: {
         innerClick () {
+            this.$emit('out', 0)
+        },
+        goto (e) {
+            let page = e.target.textContent.split('')[1]
+            this.$router.push(this.href + '/' + page)
             this.$emit('out', 0)
         }
     }

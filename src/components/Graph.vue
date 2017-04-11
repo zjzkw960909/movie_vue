@@ -1,33 +1,36 @@
 <template lang="pug">
 div
-    section(v-if="type === 'list'")
-        img.image(src="../assets/a.jpg")
-        .desc
-            .title 这个是我的题目
-            .detail 详细心嘻嘻
-        .bottom
-            .person
-                i.fa.fa-user-circle-o
-                span 名字
-            .watch
-                i.fa.fa-eye
-                span 433万
-            .click
-                i.fa.fa-thumbs-up
-                span 19万
+    router-link(v-if="type === 'list'", :to="{path: '/graphDetail/' + data.id + '/1'}")
+        section
+            img.image(:src="data.pic")
+            .desc
+                .title {{ data.name }}
+                .detail {{ data.desc }}
+            .bottom
+                .person
+                    i.fa.fa-user-circle-o
+                    span {{ data.date }}
+                .watch
+                    i.fa.fa-eye
+                    span {{ data.watch }}万
+                .click
+                    i.fa.fa-thumbs-up
+                    span {{ data.comments }}万
     section(v-else)
-        img.image1(src="../assets/a.jpg")
+        img.image1(:src="JSON.parse(data.pic)[0]")
         .desc
-            .detail(style="font-size:16px") 详细心嘻嘻
+            .detail(style="font-size:16px") {{ data.desc }}
 </template>
 
 <script>
 export default {
     name: 'graph',
-    props: ['type'],
+    props: ['type', 'data'],
     data () {
         return {
         }
+    },
+    methods: {
     }
 }
 </script>
@@ -38,7 +41,7 @@ section{
     background:#fff;
     width:100%;
     box-shadow:0px 0px 2px #aaa;
-    margin-bottom:8px;
+    margin-bottom:20px;
 }
 .image{
     width:100%;
@@ -80,5 +83,8 @@ section{
 }
 .click{
     flex:1
+}
+a{
+    text-decoration:none
 }
 </style>

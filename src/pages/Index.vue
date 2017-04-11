@@ -7,7 +7,7 @@
             mt-tab-item(id=1) 最新
             mt-tab-item(id=2) 最热
     .graphs
-        Graph(type="list")
+        Graph(v-for="(v, k) in list", type="list", :data="v", key="k")
         
     
 </template>
@@ -22,7 +22,16 @@ export default {
         return {
             selected: '1'
         }
+    },
+    computed: {
+        list () {
+            return this.$store.getters.graphList.data
+        }
+    },
+    created () {
+        this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
     }
+
 }
 </script>
 

@@ -13,12 +13,12 @@ const AdminGraphDetail = resolve => require(['../admin/GraphDetail'], resolve)
 export default new Router({
     routes: [
         {
-            path: '/',
+            path: '/graphList/:PAGE',
             name: 'index',
             component: Index
         },
         {
-            path: '/graphDetail/:ID/',
+            path: '/graphDetail/:ID/:PAGE',
             name: 'graphDetail',
             component: GraphDetail
         },

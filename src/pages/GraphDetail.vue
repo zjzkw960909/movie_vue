@@ -3,7 +3,7 @@ div
     transition(name="custom-classes-transition", 
         enter-active-class="animated slideInLeft", 
         leave-active-class="animated slideOutLeft")
-        graph-page(v-on:out="cancel", v-show="showPage")
+        graph-page(v-on:out="cancel", v-show="showPage", :href="href", :pages="list.pages")
     .contain
         .top
             mt-header(title="图解详情")
@@ -14,7 +14,7 @@ div
                 mt-tab-item(id=2) 我要吐槽
         div(@click="show")
             .graphs(v-if="selected === '1'")
-                Graph(type="detail")
+                Graph(v-for="(v, k) in list.data", type="detail", key="k", :data="v")
             .comments(v-if="selected === '2'")
                 Comment
             
@@ -31,8 +31,25 @@ export default {
     data () {
         return {
             selected: '1',
-            showPage: 0
+            showPage: 0,
+            href: ''
         }
+    },
+    computed: {
+        graphId () {
+            return this.$route.params.ID
+        },
+        list () {
+            return this.$store.getters.graphDetailList
+        }
+    },
+    created () {
+        this.href = '/' + this.$route.name + '/' + this.graphId
+        this.$store.dispatch('getGraphDetailList', 'graphId=' + this.graphId + '&page=' + this.$route.params.PAGE)
+    },
+    beforeRouteUpdate (to, from, next) {
+        this.$store.dispatch('getGraphDetailList', 'page=' + to.params.PAGE)
+        next()
     },
     methods: {
         cancel (e) {

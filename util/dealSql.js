@@ -68,7 +68,7 @@ var exportData = function (table, fields) {
         }
         fields.shift();
         for(var i = 0; i < fields.length; i++) {
-            if (params[fields[i]]) {
+            if (params[fields[i]] !== undefined) {
                 sqlFields.push(fields[i]);
                 temp.push(params[fields[i]]);
                 items.push(`${fields[i]} = ${params[fields[i]]}`);

@@ -3,18 +3,17 @@ div
     AdminHeader
     .contain
         nav
-            el-menu(default-active="2",theme="dark",@open="handleOpen",@close="handleClose", class="outHeight")
+            el-menu(default-active="1",theme="dark",@open="handleOpen",@close="handleClose", class="outHeight")
                 el-submenu(index="1")
-                    template(slot="title") 导航
-                    el-menu-item-group(title="分组一")
-                        el-menu-item(index="1-1") 选项一
-                        el-menu-item(index="1-2") 选项二
-                    el-menu-item-group(title="分组二")
-                        el-menu-item(index="1-3") 选项三
-                el-menu-item(index="2") 导航二
+                    template(slot="title") gif图解
+                    router-link(to="/admin/graph-list/1")
+                        el-menu-item(index="1-1") gif主题管理
+                    router-link(to="/admin")
+                        el-menu-item(index="1-2") gif评论管理
+                el-menu-item(index="2") 票选图解
                 el-menu-item(index="3") 导航三
         article
-            .top 导航一
+            .top {{ title }}
             .pad
                 router-view
                        
@@ -32,6 +31,11 @@ export default {
     components: {AdminHeader},
     data () {
         return {
+        }
+    },
+    computed: {
+        title () {
+            return this.$store.state.animate.adminTitle
         }
     },
     methods: {
@@ -62,14 +66,14 @@ article{
     height:100%;
     box-sizing:border-box;
 }
+.pad{
+    padding:10px;
+}
 .top{
     background:#eef1f6;
     margin-top:10px;
     font-size:15px;
     padding:15px;
     color:#666;
-}
-.pad{
-    padding:10px;
 }
 </style>

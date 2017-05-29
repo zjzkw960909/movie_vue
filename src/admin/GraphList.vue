@@ -10,13 +10,15 @@ div
         el-button(style="float:right;margin:4px", @click="sub", type="success") 确定
         el-button(style="float:right;margin:4px", @click="cancel", type="warning") 取消
     el-table(:data="tableData.data", style="width:100%", border)
-        el-table-column(prop="date",label="日期",width:180)
+        el-table-column(prop="date",label="日期",width:100)
         el-table-column(prop="name",label="图解名",width:140)
-        el-table-column(prop="desc",label="描述",width:140)
-        el-table-column(fixed="right",label="操作",width:140)
+        el-table-column(prop="desc",label="描述",width:130)
+        el-table-column(fixed="right",label="操作",width:160)
             template(scope="scope", lang="pug")
+                el-button(type="text", size="small", @click="pass(scope)") {{ scope.row.checked ? '不通过': '通过' }}
+                el-button(type="text", size="small", @click="vote(scope)") {{ scope.row.isVote ? '不设票选': '设票选' }}
                 el-button(type="text", size="small", @click="edit(scope)") 编辑
-                el-button(type="text", size="small", @click="del(scope)") 删除 
+                el-button(type="text", size="small", @click="del(scope)") 删除
                 el-button(type="text", size="small", @click="href(scope)") 查看
     Page(:pages='tableData.pages', :page='tableData.page', @emit="gotoPage")
 </template>
@@ -40,7 +42,9 @@ export default {
         tableData: 'graphList'
     }),
     created () {
-        this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
+        var store = this.$store
+        store.dispatch('changeAdminTitle', 'gif主题管理列表')
+        store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
     },
     beforeRouteUpdate (to, from, next) {
         this.$store.dispatch('getGraphList', 'page=' + to.params.PAGE)
@@ -62,11 +66,11 @@ export default {
             if (this.editId) {
                 post.id = this.editId
                 http.put('/api/graph', post).then((res) => {
-                    this.$store.dispatch('getGraphList', 'page=1')
+                    this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
                 })
             } else {
                 http.post('/api/graph', post).then((res) => {
-                    this.$store.dispatch('getGraphList', 'page=1')
+                    this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
                 })
             }
             this.init()
@@ -90,6 +94,38 @@ export default {
             this.imageUrl = data.pic
             this.dialogFormVisible = true
             this.editId = data.id
+        },
+        pass (e) {
+            let data = e.row
+            let checked
+            if (data.checked) {
+                checked = 0
+            } else {
+                checked = 1
+            }
+            let post = {
+                checked: checked,
+                id: data.id
+            }
+            this.$http.put('/api/graph', post).then(() => {
+                this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
+            })
+        },
+        vote (e) {
+            let data = e.row
+            let isVote
+            if (data.isVote) {
+                isVote = 0
+            } else {
+                isVote = 1
+            }
+            let post = {
+                isVote: isVote,
+                id: data.id
+            }
+            this.$http.put('/api/graph', post).then(() => {
+                this.$store.dispatch('getGraphList', 'page=' + this.$route.params.PAGE)
+            })
         },
         gotoPage (e) {
             this.$router.push(e + '')

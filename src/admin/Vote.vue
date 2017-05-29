@@ -1,28 +1,5 @@
 <template lang="pug">
 div
-    el-dialog(title="编辑", v-model="dialogFormVisible", @close="cancel")
-        el-input(style="margin:10px 0", type="textarea", :rows="2", placeholder="请输入详细描述", v-model="desced")
-        el-upload(class="avatar-uploader", action="/api/upload", :show-file-list="false", :on-success="handleAvatarScucess")
-            img(v-for="v in imageUrl", :src="v", class="avatar")
-            i(class="el-icon-plus avatar-uploader-icon")
-        el-button(style="float:right;margin:4px", @click="add", type="success") 确定
-        el-button(style="float:right;margin:4px", @click="cancel", type="warning") 取消
-    .add
-        el-input(style="margin:10px 0;flex:4", type="textarea", :rows="2", placeholder="请输入详细描述", v-model="desc")
-        el-upload(style="display:inline-block", action="/api/upload", :on-remove="handleRemove", :file-list="fileList", :on-success="succesFiles")
-            el-button(size="small" type="success") 点击上传图片
-        el-button(style="float:right;margin:4px", @click="add", type="primary") 保存
-        
-    el-table(:data="tableData.data", style="width:100%", border)
-        el-table-column(prop="desc",label="详细内容",width:140)
-        el-table-column(label="图片",width:140)
-            template(scope="scope", lang="pug")
-                img(v-for="v in JSON.parse(scope.row.pic)", :src="v")
-        el-table-column(fixed="right",label="操作",width:140)
-            template(scope="scope", lang="pug")
-                el-button(type="text", size="small", @click="edit(scope)") 编辑
-                el-button(type="text", size="small", @click="del(scope)") 删除
-    Page(:pages='tableData.pages', :page='tableData.page', @emit="gotoPage")
 
 </template>
 

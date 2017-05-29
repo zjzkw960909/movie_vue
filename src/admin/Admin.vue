@@ -5,7 +5,7 @@ div
         nav
             el-menu(default-active="2",theme="dark",@open="handleOpen",@close="handleClose", class="outHeight")
                 el-submenu(index="1")
-                    template(slot="title") 导航一
+                    template(slot="title") 导航
                     el-menu-item-group(title="分组一")
                         el-menu-item(index="1-1") 选项一
                         el-menu-item(index="1-2") 选项二

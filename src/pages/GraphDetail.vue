@@ -7,7 +7,7 @@ div
     .contain
         .top
             mt-header(title="图解详情")
-                mt-button(icon="back", slot="left")
+                mt-button(icon="back", slot="left", @click="back")
                 mt-button(icon="more", slot="right")
             mt-navbar(v-model="selected")
                 mt-tab-item(id=1) 图解
@@ -57,6 +57,9 @@ export default {
         },
         show () {
             this.showPage = !this.showPage
+        },
+        back () {
+            this.$router.go(-1)
         }
     }
 }
@@ -74,7 +77,6 @@ export default {
 }
 .graphs{
     margin-top:89px;
-    padding:6px 12px
 }
 .comments{
     margin-top:89px;

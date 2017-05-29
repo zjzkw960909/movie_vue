@@ -5,7 +5,7 @@
             mt-button(icon="more", slot="right")
         mt-navbar(v-model="selected")
             mt-tab-item(id=1) 最新
-            mt-tab-item(id=2) 最热
+            mt-tab-item(id=2) 随机一下
     .graphs
         Graph(v-for="(v, k) in list", type="list", :data="v", key="k")
         
@@ -47,6 +47,5 @@ export default {
 }
 .graphs{
     margin-top:89px;
-    padding:6px 12px
 }
 </style>

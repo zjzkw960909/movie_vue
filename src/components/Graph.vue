@@ -45,11 +45,11 @@ section{
 }
 .image{
     width:100%;
-    height:104px;
+    height:100%;
 }
 .image1{
     width:100%;
-    height:204px;
+    height:100%;
 }
 .desc{
     padding:8px;

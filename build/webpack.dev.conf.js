@@ -19,6 +19,9 @@ module.exports = merge(baseWebpackConfig, {
   devtool: '#source-map',
   //devtool: '#cheap-module-eval-source-map',
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+        names: ['vendor', 'manifest'] //提取第三方库，manifest防止写业务代码时编译第三方库
+    }), 
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),

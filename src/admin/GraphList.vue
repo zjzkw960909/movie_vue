@@ -18,7 +18,7 @@ div
                 el-button(type="text", size="small", @click="edit(scope)") 编辑
                 el-button(type="text", size="small", @click="del(scope)") 删除 
                 el-button(type="text", size="small", @click="href(scope)") 查看
-    Page(:allPages='tableData.pages', :page='tableData.page', @changePage="gotoPage")
+    Page(:pages='tableData.pages', :page='tableData.page', @emit="gotoPage")
 </template>
 
 <script>
@@ -92,7 +92,7 @@ export default {
             this.editId = data.id
         },
         gotoPage (e) {
-            this.$router.push({path: e})
+            this.$router.push(e + '')
         },
         del (e) {
             this.$msgbox({

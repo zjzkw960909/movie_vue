@@ -1,94 +1,113 @@
 <template lang="pug">
 .page
     ul
-        li(v-if="page !== 1", @click="prev") 上一页 
-        li(:class="{ 'clickColor': page === 1 }", @click="click") 1
-        strong(v-if="front") ...
-        li(:class="{ 'clickColor': page === v }", v-for="v in items()", @click="click") {{ v }}
-        strong(v-if="back") ...
-        li(v-if="allPages !== 1", :class="{ 'clickColor': page === allPages}", @click="click") {{ allPages }}
-        li(v-if="page !== allPages", @click="next") 下一页
+        li(v-if="nowPage !== 1", @click="prev") 上一页 
+        li(v-for="(v, k) in tempPages", @click="jump", :class="v == nowPage ? 'active': ''") {{ v }}
+        li(v-if="nowPage !== nowPages", @click="next") 下一页
     .jump
-        span 共{{ allPages }}页,跳到
-        input.form-control(@keyup.enter="enter")
+        span 共{{ pages }}页,跳到
+        input.form-control(@keyup.enter="jump")
         | 页
 </template>
 <script>
 export default {
-    props: ['allPages', 'page'],
     data () {
         return {
-            limit: 4,
-            front: false,
-            back: false,
-            dataPages: '',
-            dataPage: ''
+            tempPages: [],
+            limit: 2,
+            max: 0,
+            nowPage: 1,
+            nowPages: 1
         }
     },
-    computed: {
-        items () {
-            return () => {
-                let page = this.page - 0
-                let pages = this.allPages - 0
-                let limit = this.limit - 0
-                let temp = []
-                if (limit + 2 >= pages) {
-                    this.front = false
-                    this.back = false
-                    for (let i = 2; pages - 2 > 0; pages--, i++) {
-                        temp.push(i)
-                    }
-                } else {
-                    if (page + limit / 2 >= pages) {
-                        this.front = true
-                        this.back = false
-                        for (let i = 0; i < limit; i++, pages--) {
-                            temp.unshift(pages - 1)
-                        }
-                    } else if (page - limit / 2 <= 2) {
-                        this.front = false
-                        this.back = true
-                        for (let i = 0, j = 2; i < limit; i++, j++) {
-                            temp.push(j)
-                        }
-                    } else {
-                        this.front = true
-                        this.back = true
-                        for (let i = 0; i < limit; i++, page++) {
-                            temp.push(page - 2)
-                        }
-                    }
-                }
-                return temp
-            }
+    props: {
+        pages: '',
+        page: ''
+    },
+    mounted () {
+        this.init()
+    },
+    watch: {
+        pages () {
+            this.init()
+        },
+        page () {
+            this.init()
+        },
+        nowPage (e) {
+            this.$emit('emit', e)
         }
     },
     methods: {
+        init () {
+            this.nowPage = this.page
+            this.nowPages = this.pages
+            this.max = this.limit * 4 + 3
+            this.initPage()
+        },
         prev () {
-            this.dataPage = this.dataPage - 1
+            if (this.nowPage > 1) {
+                this.nowPage --
+                this.initPage()
+            }
         },
         next () {
-            this.dataPage = this.dataPage + 1
-        },
-        click (e) {
-            this.dataPage = e.target.textContent - 0
-        },
-        enter (e) {
-            var dataPage = e.target.value - 0
-            if (dataPage > 0 && dataPage <= this.dataPages) {
-                this.dataPage = dataPage
+            if (this.nowPage < this.nowPages) {
+                this.nowPage ++
+                this.initPage()
             }
-        }
-    },
-    watch: {
-        page: function () {
-            this.dataPage = this.page
         },
-        allPages: function () {
-            this.dataPages = this.allPages
+        jump (e) {
+            let page = e.target.textContent || e.target.value - 0
+            if (page > 0 && page <= this.nowPages) {
+                this.nowPage = page
+                this.initPage()
+            }
         },
-        dataPage: function (page) {
-            this.$emit('changePage', page + '')
+        initPage () {
+            if (this.nowPages <= this.max) {
+                this.tempPages = Array.from({length: this.nowPages}, (v, k) => {
+                    v = k + 1
+                    return v
+                })
+            } else if (this.nowPage - this.limit * 2 - 1 <= 1) {
+                this.tempPages = Array.from({length: this.max + 1}, (v, k) => {
+                    if (k + 1 <= this.limit * 3 + 2) {
+                        v = k + 1
+                    } else if (k + 1 === this.limit * 3 + 3) {
+                        v = '...'
+                    } else {
+                        v = this.nowPages - (this.max - k)
+                    }
+                    return v
+                })
+            } else if (this.nowPage + this.limit * 2 + 1 >= this.nowPages) {
+                this.tempPages = Array.from({length: this.max + 1}, (v, k) => {
+                    if (k + 1 <= this.limit * 1 + 1) {
+                        v = k + 1
+                    } else if (k + 1 === this.limit * 1 + 2) {
+                        v = '...'
+                    } else {
+                        v = this.nowPages - (this.limit * 3 + 2 - (k - this.limit * 2 + 1))
+                    }
+                    return v
+                })
+            } else {
+                this.tempPages = Array.from({length: this.max + 2}, (v, k) => {
+                    if (k + 1 <= this.limit * 1 + 1) {
+                        v = k + 1
+                    } else if (k + 1 === this.limit * 1 + 2) {
+                        v = '...'
+                    } else if (k + 1 > this.limit * 1 + 2 && k + 1 < this.limit * 3 + 4) {
+                        v = this.nowPage - 2 + (k - this.limit * 2)
+                    } else if (k + 1 === this.limit * 3 + 4) {
+                        v = '...'
+                    } else {
+                        v = this.nowPages - (this.limit * 3 + 3 - (k - this.limit * 2 + 1))
+                    }
+                    return v
+                })
+            }
         }
     }
 }
@@ -135,7 +154,7 @@ export default {
     margin-left:10px;
     color:#999;
 }
-.page .clickColor{
+.page .active{
     background-color:rgba(193,49,44,1);
     color:#fff;
 }

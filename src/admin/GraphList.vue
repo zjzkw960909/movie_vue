@@ -75,6 +75,8 @@ export default {
             }
             this.init()
         },
+        btnClick (e) {
+        },
         handleAvatarScucess (res) {
             this.imageUrl = res.path
         },
